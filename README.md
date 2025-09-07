@@ -57,7 +57,7 @@ Ensure you have **Python 3.8 or higher** installed.
 ```bash
 git clone https://github.com/vikaspathak0911/ai-agent-langgraph.git
 cd ai-agent-langgraph
-
+```
 
 ## Directory Structure
 
@@ -74,7 +74,7 @@ ai-agent-langgraph/
 ├── tests/               # Unit tests for the application
 └── setup_project.sh     # Script for setting up the project environment
 
-
+```
 
 ---
 
@@ -128,12 +128,14 @@ python app.py
 
 The application will start on http://127.0.0.1:5500
 
-
+```
 
 ##sample
 <img width="1912" height="1048" alt="image" src="https://github.com/user-attachments/assets/fb9be8c5-de9f-4150-8072-77f940ea806d" />
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/f1774a56-9def-49d1-99ab-88b09e2f98e3" />
+
+
 
 
 
