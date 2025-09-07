@@ -114,10 +114,10 @@ def responder(state: AgentState):
     # Order Help
     elif intent == "order_help":
         if policy and policy.get("cancel_allowed"):
-            message = "✅ Your order was successfully cancelled."
+            message = "Your order was successfully cancelled."
         else:
             reason = policy.get("reason","")
-            message = f"❌ Cancellation not allowed ({reason}). You can: update shipping address, request store credit, or contact support."
+            message = f"Cancellation not allowed ({reason}). You can: update shipping address, request store credit, or contact support."
 
     # Guardrail / Other
     else:

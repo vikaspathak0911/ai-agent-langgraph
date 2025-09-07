@@ -20,6 +20,7 @@ def chat():
             
         user_input = data.get("user_input", "")
         
+        
         if not user_input.strip():
             return jsonify({"error": "Empty message"}), 400
 
@@ -33,7 +34,10 @@ def chat():
             final_message=""
         )
 
-        trace = agent.invoke(state)
+        trace = agent.invoke(state)     
+        print(trace)
+
+
 
         # Ensure trace is a plain dict
         if not isinstance(trace, dict):
