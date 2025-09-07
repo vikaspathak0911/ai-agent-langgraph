@@ -169,8 +169,35 @@ def size_recommender(user_input):
 
     return f"Based on your input, we recommend size {size} ({fit} fit)."
 
+# ZIP code region mapping
+shipping_regions = {
+    "East": {"zip_range": range(10000, 20000), "standard": (3, 5)},    # (min_days, max_days)
+    "Midwest": {"zip_range": range(50000, 60000), "standard": (4, 6)},
+    "West": {"zip_range": range(90000, 100000), "standard": (5, 7)},
+}
+
+DEFAULT_PROCESSING_DAYS = 2  # Default processing time added to range
+
 def eta(zip_code):
-    return "2-5 days"
+    """
+    Return ETA as a range of days (e.g., '2-5 days') based on ZIP code.
+    
+    Args:
+        zip_code (int): Customer ZIP code
+    Returns:
+        str: ETA range as a string
+    """
+    # Default range if ZIP not found
+    min_days, max_days = 4, 7
+    
+    for region, info in shipping_regions.items():
+        if zip_code in info["zip_range"]:
+            region_min, region_max = info["standard"]
+            min_days = region_min + DEFAULT_PROCESSING_DAYS
+            max_days = region_max + DEFAULT_PROCESSING_DAYS
+            break
+    
+    return f"{min_days}-{max_days} days"
 
 # ---------------- Order Tools ----------------
 def order_lookup(order_id, email):
