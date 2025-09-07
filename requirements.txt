@@ -1,0 +1,6 @@
+# requirements
+flask-cors
+langgraph==0.1.10          # core framework for agent graph
+typing_extensions==4.9.0 
+  # for TypedDict support in Python <3.10
+

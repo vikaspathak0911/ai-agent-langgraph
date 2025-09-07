@@ -8,12 +8,15 @@ touch requirements.txt
 mkdir -p src
 touch src/graph_basic.py
 touch src/graph_enhanced.py
-touch src/memory.py
 touch src/tools.py
 
-# Create data directory and memory.json
+# Create data directory 
 mkdir -p data
-touch data/memory.json
+touch data/products.json    
+touch data/orders.json
+
+mkdir -p prompts
+touch prompts/system.md
 
 # Create tests directory and test_cases.py
 mkdir -p tests
