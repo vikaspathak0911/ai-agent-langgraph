@@ -103,13 +103,34 @@ def responder(state: AgentState):
         "final_message": ""
     }
 
-    # Product Assist
+ # Product Assist
     if intent == "product_assist":
-        products = [f"{p['title']} (${p['price']}, sizes {','.join(p['sizes'])})"
-                    for p in evidence if "title" in p]
-        size = next((e["size_recommendation"] for e in evidence if "size_recommendation" in e), "")
-        eta_msg = next((e["eta"] for e in evidence if "eta" in e), "")
-        message = f"Here are some options: {', '.join(products)}. {size} ETA: {eta_msg}."
+        product_lines = []
+        for p in evidence:
+            if "title" not in p:
+                continue
+            title = p.get("title", "")
+            price = p.get("price", "")
+            sizes = ",".join(p.get("sizes", []))
+            color = p.get("color", "")
+            size_rec = p.get("size_recommendation", "")
+            tags = ",".join(p.get("tags", []))
+            eta_msg = p.get("eta", "")
+            
+            line_parts = [f"{title}"]
+            if price: line_parts.append(f"${price}")
+            if sizes: line_parts.append(f"Sizes: {sizes}")
+            if color: line_parts.append(f"Color: {color}")
+            if size_rec: line_parts.append(f"Recommended Size: {size_rec}")
+            if tags: line_parts.append(f"Tags: {tags}")
+            if eta_msg: line_parts.append(f"ETA: {eta_msg}")
+            
+            product_lines.append(" | ".join(line_parts))
+        
+        if product_lines:
+            message = "Here are some options:\n" + "\n".join(product_lines)
+        else:
+            message = "No matching products found."
 
     # Order Help
     elif intent == "order_help":

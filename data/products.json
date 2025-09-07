@@ -3,5 +3,26 @@
   {"id":"P2","title":"Satin Slip Dress","price":99,"tags":["wedding","midi"],"sizes":["XS","S","M"],"color":"Blush"},
   {"id":"P3","title":"Knit Bodycon","price":89,"tags":["midi"],"sizes":["M","L"],"color":"Navy"},
   {"id":"P4","title":"A-Line Day Dress","price":75,"tags":["daywear","midi"],"sizes":["S","M","L"],"color":"Olive"},
-  {"id":"P5","title":"Sequin Party Dress","price":149,"tags":["party"],"sizes":["S","M"],"color":"Black"}
+  {"id":"P5","title":"Sequin Party Dress","price":149,"tags":["party"],"sizes":["S","M"],"color":"Black"},
+  {"id":"P1","title":"Trendy Midi Wrap Dress","price":118,"tags":["party","winter","formal"],"sizes":["M","XL"],"color":"Red"},
+  {"id":"P2","title":"Chic Midi Wrap Dress","price":158,"tags":["wedding","midi","party"],"sizes":["XS","L"],"color":"Lavender"},
+  {"id":"P3","title":"Stylish Knit Bodycon","price":106,"tags":["midi"],"sizes":["XS","M","L"],"color":"Sky Blue"},
+  {"id":"P4","title":"Stylish Satin Slip Dress","price":104,"tags":["party","casual"],"sizes":["M","L"],"color":"Brown"},
+  {"id":"P5","title":"Chic A-Line Day Dress","price":80,"tags":["casual","daywear","party"],"sizes":["S","M","L"],"color":"Charcoal"},
+  {"id":"P6","title":"Classic A-Line Day Dress","price":79,"tags":["evening","party"],"sizes":["S","L","M","XS","XL"],"color":"Charcoal"},
+  {"id":"P7","title":"Elegant Midi Wrap Dress","price":169,"tags":["wedding"],"sizes":["XL","M","S"],"color":"Pink"},
+  {"id":"P8","title":"Fancy Knit Bodycon","price":118,"tags":["casual","cocktail","daywear"],"sizes":["XS","XL"],"color":"Gold"},
+  {"id":"P9","title":"Classic A-Line Day Dress","price":105,"tags":["midi","summer"],"sizes":["XL","S","M","XS","L"],"color":"Navy"},
+  {"id":"P10","title":"Chic Sequin Party Dress","price":138,"tags":["winter"],"sizes":["XS","M","S","XL"],"color":"Rose"},
+  {"id":"P11","title":"Trendy A-Line Day Dress","price":117,"tags":["evening","wedding"],"sizes":["XL","M","XS","L"],"color":"Red"},
+  {"id":"P12","title":"Elegant Midi Wrap Dress","price":123,"tags":["formal"],"sizes":["L","M","XL","XS"],"color":"Brown"},
+  {"id":"P13","title":"Modern Satin Slip Dress","price":115,"tags":["wedding","daywear"],"sizes":["M","XS","XL","S"],"color":"Navy"},
+  {"id":"P14","title":"Elegant A-Line Day Dress","price":108,"tags":["cocktail","wedding","daywear"],"sizes":["M","XL"],"color":"Rose"},
+  {"id":"P15","title":"Modern Knit Bodycon","price":90,"tags":["party","casual","evening"],"sizes":["XL","S","L","M"],"color":"Sky Blue"},
+  {"id":"P16","title":"Classic Knit Bodycon","price":85,"tags":["cocktail"],"sizes":["XL","XS"],"color":"Gold"},
+  {"id":"P17","title":"Trendy A-Line Day Dress","price":87,"tags":["evening","summer"],"sizes":["L","XL","S","M"],"color":"Teal"},
+  {"id":"P18","title":"Fancy Midi Wrap Dress","price":148,"tags":["winter"],"sizes":["XS","S","M","XL"],"color":"Cyan"},
+  {"id":"P19","title":"Chic Knit Bodycon","price":89,"tags":["party"],"sizes":["L","XL","S"],"color":"Maroon"},
+  {"id":"P20","title":"Trendy Sequin Party Dress","price":150,"tags":["cocktail","winter"],"sizes":["M","XS","S"],"color":"Maroon"}
+
 ]

@@ -3,6 +3,8 @@ import json
 import os
 import re
 from datetime import datetime, timezone, timedelta
+from difflib import get_close_matches
+
 
 # ---------------- Data Load ----------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -12,10 +14,19 @@ PRODUCTS = json.load(open(os.path.join(DATA_DIR, "products.json")))
 ORDERS = json.load(open(os.path.join(DATA_DIR, "orders.json")))
 
 # ---------------- Helpers ----------------
+import re
+
 def parse_price(query: str):
-    """Extract max price from user input (e.g. 'under $120')"""
-    match = re.search(r"under\s*\$?(\d+)", query.lower())
-    return int(match.group(1)) if match else 999
+    """
+    Extract maximum price from user input.
+    Returns a high default if no price mentioned.
+    """
+    query_lower = query.lower()
+
+    # Patterns: "under $100", "less than 100", "below 120"
+    match = re.search(r"(?:under|less than|below)\s*\$?(\d+)", query_lower)
+    return int(match.group(1)) if match else float('inf')
+
 
 def parse_tags(query: str):
     """Extract tags based on keywords in user input"""
@@ -27,13 +38,63 @@ def parse_tags(query: str):
     if "day" in q or "daywear" in q: tags.append("daywear")
     return tags
 
-def parse_color(query: str):
-    """Extract color keyword from query if it matches a product"""
-    q = query.lower()
-    for p in PRODUCTS:
-        if p["color"].lower() in q:
-            return p["color"]
-    return None
+
+# List of 100 common color names
+COLOR_PALETTE = [
+    "black", "white", "red", "blue", "green", "yellow", "pink", "orange",
+    "purple", "brown", "grey", "violet", "indigo", "turquoise", "beige",
+    "maroon", "navy", "olive", "teal", "lime", "magenta", "cyan", "gold",
+    "silver", "bronze", "peach", "lavender", "cream", "mint", "coral",
+    "apricot", "tan", "chocolate", "burgundy", "charcoal", "mustard",
+    "khaki", "plum", "salmon", "sky blue", "rose", "emerald", "jade",
+    "amber", "sapphire", "ruby", "copper", "ivory", "mauve", "lemon",
+    "cerulean", "fuchsia", "cerise", "orchid", "wheat", "cinnamon", "sienna",
+    "periwinkle", "lavender blush", "pale green", "forest green", "sea green",
+    "slate gray", "midnight blue", "electric blue", "pearl", "blush", "cream white",
+    "powder blue", "rust", "burgundy red", "cherry", "almond", "coffee",
+    "mahogany", "taupe", "sand", "jet black", "mint green", "baby blue",
+    "bubblegum pink", "canary yellow", "raspberry", "plum purple", "fawn",
+    "ash gray", "smoke", "emerald green", "lemon yellow", "cobalt", "aqua",
+    "denim", "charcoal gray", "olive drab", "seafoam", "moss green", "indian red",
+    "celeste", "cream yellow", "peacock", "carmine", "topaz"
+]
+
+def parse_color(query: str, products=None, return_all=False):
+    """
+    Detect color from user query based on a 100-color palette.
+    Optionally map to product colors if a product list is provided.
+    """
+    query_clean = re.sub(r"[^\w\s]", "", query.lower())
+    words = query_clean.split()
+
+    # Exact matches from the palette
+    matches = [color for color in COLOR_PALETTE if color in query_clean]
+
+    # Fuzzy match fallback
+    if not matches:
+        for word in words:
+            close = get_close_matches(word, COLOR_PALETTE, n=1, cutoff=0.7)
+            if close:
+                matches.append(close[0])
+
+    if not matches:
+        return None
+
+    detected_colors = matches if return_all else [matches[0]]
+
+    # Map detected colors to product colors if products provided
+    if products:
+        product_colors = {p["color"].lower(): p["color"] for p in products}
+        mapped_colors = []
+        for color in detected_colors:
+            # Fuzzy match to product colors
+            close = get_close_matches(color, product_colors.keys(), n=1, cutoff=0.7)
+            if close:
+                mapped_colors.append(product_colors[close[0]])
+        return mapped_colors if return_all else mapped_colors[0] if mapped_colors else None
+
+    return detected_colors if return_all else detected_colors[0]
+
 
 # ---------------- Product Tools ----------------
 def product_search(query, price_max=None, tags=None):
@@ -67,9 +128,46 @@ def product_search(query, price_max=None, tags=None):
 
 
 def size_recommender(user_input):
-    if "m/l" in user_input.lower():
-        return "We recommend size M for medium build, L if you prefer loose fit."
-    return "Size M is most common."
+    text = user_input.lower()
+
+    # Defaults
+    height = "average"
+    weight = "average"
+    fit = "regular"
+
+    # Detect height
+    if any(word in text for word in ["tall", "high", "long"]):
+        height = "tall"
+    elif any(word in text for word in ["short", "small"]):
+        height = "short"
+
+    # Detect build/weight
+    if any(word in text for word in ["slim", "thin", "light"]):
+        weight = "slim"
+    elif any(word in text for word in ["medium", "average", "normal"]):
+        weight = "medium"
+    elif any(word in text for word in ["heavy", "large", "big"]):
+        weight = "large"
+
+    # Detect fit preference
+    if "loose" in text:
+        fit = "loose"
+    elif "tight" in text or "slim fit" in text:
+        fit = "tight"
+
+    # Size decision rules
+    if weight == "slim":
+        size = "S" if fit != "loose" else "M"
+    elif weight == "medium":
+        size = "M" if fit != "loose" else "L"
+    else:  # large/heavy
+        size = "L" if fit != "loose" else "XL"
+
+    # Adjust for height
+    if height == "tall" and size != "XL":
+        size += "-Tall"
+
+    return f"Based on your input, we recommend size {size} ({fit} fit)."
 
 def eta(zip_code):
     return "2-5 days"
