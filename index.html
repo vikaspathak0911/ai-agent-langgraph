@@ -105,13 +105,15 @@
         const sendBtn = document.getElementById('sendBtn');
 
         // Add message function
-        function addMessage(text, isUser) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${isUser ? 'user-msg' : 'bot-msg'}`;
-            msgDiv.textContent = text;
-            messagesDiv.appendChild(msgDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
+       function addMessage(text, isUser) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user-msg' : 'bot-msg'}`;
+        // preserve line breaks
+        msgDiv.innerHTML = text.replace(/\n/g, "<br>");
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
 
         // Send message function
         async function sendMessage() {

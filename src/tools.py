@@ -73,7 +73,7 @@ def parse_color(query: str, products=None, return_all=False):
     # Fuzzy match fallback
     if not matches:
         for word in words:
-            close = get_close_matches(word, COLOR_PALETTE, n=1, cutoff=0.7)
+            close = get_close_matches(word, COLOR_PALETTE, n=1, cutoff=0.8)
             if close:
                 matches.append(close[0])
 
@@ -127,8 +127,8 @@ def product_search(query, price_max=None, tags=None):
     return results[:2]
 
 
-def size_recommender(user_input):
-    text = user_input.lower()
+def size_recommender(query: str):
+    text = query.lower()
 
     # Defaults
     height = "average"
@@ -167,37 +167,46 @@ def size_recommender(user_input):
     if height == "tall" and size != "XL":
         size += "-Tall"
 
-    return f"Based on your input, we recommend size {size} ({fit} fit)."
+    return f"we recommend size {size} ({fit} fit)."
 
 # ZIP code region mapping
 shipping_regions = {
-    "East": {"zip_range": range(10000, 20000), "standard": (3, 5)},    # (min_days, max_days)
-    "Midwest": {"zip_range": range(50000, 60000), "standard": (4, 6)},
-    "West": {"zip_range": range(90000, 100000), "standard": (5, 7)},
+    "East": {"zip_range": range(0, 300001), "standard": (3, 5)},    # 0-300000
+    "Midwest": {"zip_range": range(300001, 650001), "standard": (4, 6)}, # 300001-650000
+    "West": {"zip_range": range(650001, 1000000), "standard": (5, 7)},   # 650001-999999
 }
 
-DEFAULT_PROCESSING_DAYS = 2  # Default processing time added to range
+DEFAULT_PROCESSING_DAYS = 1  # Default processing time added to range
 
-def eta(zip_code):
+def eta(query):
     """
-    Return ETA as a range of days (e.g., '2-5 days') based on ZIP code.
+    Extract ZIP code from user message and return ETA as a range of days.
     
     Args:
-        zip_code (int): Customer ZIP code
+        query (str): Message containing ZIP code
     Returns:
-        str: ETA range as a string
+        str: ETA range as a string, e.g., '4-6 days'
     """
+    # Extract 6-digit ZIP code
+    match = re.search(r'\b\d{6}\b', query)
+    if not match:
+        return "ETA unavailable"
+    
+    zip_code = int(match.group())
+
     # Default range if ZIP not found
     min_days, max_days = 4, 7
-    
+
+    # Find region and calculate ETA
     for region, info in shipping_regions.items():
         if zip_code in info["zip_range"]:
             region_min, region_max = info["standard"]
             min_days = region_min + DEFAULT_PROCESSING_DAYS
             max_days = region_max + DEFAULT_PROCESSING_DAYS
             break
-    
+
     return f"{min_days}-{max_days} days"
+
 
 # ---------------- Order Tools ----------------
 def order_lookup(order_id, email):

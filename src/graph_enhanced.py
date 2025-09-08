@@ -37,15 +37,16 @@ def tool_selector(state: AgentState):
         results = product_search(query=text, price_max=price_max, tags=tags)
 
         tools_called.append("product_search")
-        evidence.extend(results)
 
         size_msg = size_recommender(text)
-        tools_called.append("size_recommender")
-        evidence.append({"size_recommendation": size_msg})
+        eta_msg = eta(text)  # must handle ZIP extraction
 
-        eta_msg = eta("560001")  # optional: parse from text
-        tools_called.append("eta")
-        evidence.append({"eta": eta_msg})
+        for p in results:
+            p["size_recommendation"] = size_msg
+            p["eta"] = eta_msg
+
+        evidence.extend(results)
+
 
     # Order Help
     elif intent == "order_help":
@@ -103,9 +104,19 @@ def responder(state: AgentState):
         "final_message": ""
     }
 
- # Product Assist
+    # Product Assist
     if intent == "product_assist":
         product_lines = []
+        global_size_rec, global_eta = "", ""
+
+        # Collect global recommendation + ETA once
+        for p in evidence:
+            if not global_size_rec and "size_recommendation" in p:
+                global_size_rec = p["size_recommendation"]
+            if not global_eta and "eta" in p:
+                global_eta = p["eta"]
+
+        # Build product lines without repeating size/eta
         for p in evidence:
             if "title" not in p:
                 continue
@@ -113,24 +124,30 @@ def responder(state: AgentState):
             price = p.get("price", "")
             sizes = ",".join(p.get("sizes", []))
             color = p.get("color", "")
-            size_rec = p.get("size_recommendation", "")
             tags = ",".join(p.get("tags", []))
-            eta_msg = p.get("eta", "")
-            
-            line_parts = [f"{title}"]
+
+            line_parts = [f"• {title}"]
             if price: line_parts.append(f"${price}")
             if sizes: line_parts.append(f"Sizes: {sizes}")
             if color: line_parts.append(f"Color: {color}")
-            if size_rec: line_parts.append(f"Recommended Size: {size_rec}")
             if tags: line_parts.append(f"Tags: {tags}")
-            if eta_msg: line_parts.append(f"ETA: {eta_msg}")
-            
+
             product_lines.append(" | ".join(line_parts))
-        
+
         if product_lines:
-            message = "Here are some options:\n" + "\n".join(product_lines)
+            # Top summary with newlines
+            message = "Here’s what I found for you:\n"
+            if global_size_rec or global_eta:
+                message += f"- {global_size_rec} ETA: {global_eta}\n\n"
+            message += "\n".join(product_lines)
         else:
             message = "No matching products found."
+
+
+        
+        trace["final_message"] = message
+        return trace
+
 
     # Order Help
     elif intent == "order_help":
