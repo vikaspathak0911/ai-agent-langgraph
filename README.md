@@ -147,7 +147,8 @@ pip install -r requirements.txt
 			
 |--------------------------------------------------------------------			
 |		# if you want to test all 4 test cases provided above 
-|		python -u "b:\Project\test\ai-agent-langgraph\tests\test_cases.py"
+|		cd tests
+|		python test_cases.py
 |----------------------------------------------------------------------
 
 ```
@@ -156,6 +157,7 @@ pip install -r requirements.txt
 <img width="1912" height="1048" alt="image" src="https://github.com/user-attachments/assets/fb9be8c5-de9f-4150-8072-77f940ea806d" />
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/f1774a56-9def-49d1-99ab-88b09e2f98e3" />
+
 
 
 
