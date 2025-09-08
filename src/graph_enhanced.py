@@ -3,6 +3,7 @@ from langgraph.graph import StateGraph, END
 from typing import TypedDict, List, Optional
 from datetime import datetime, timezone
 from tools import product_search, size_recommender, eta, order_lookup, order_cancel, parse_price, parse_tags
+import string
 
 # ---------- State ----------
 class AgentState(TypedDict):
@@ -48,16 +49,17 @@ def tool_selector(state: AgentState):
         evidence.extend(results)
 
 
-    # Order Help
     elif intent == "order_help":
         order_id, email = None, None
         words = text.split()
         for w in words:
-            if w.startswith("a") and w[1:].isdigit():
-                order_id = w.upper()
+            clean_word = w.strip(string.punctuation)
+            if clean_word.startswith("a") and clean_word[1:].isdigit():
+                order_id = clean_word.upper()
         for w in words:
-            if "@" in w:
-                email = w
+            clean_word = w.strip(string.punctuation)
+            if "@" in clean_word:
+                email = clean_word
 
         order = order_lookup(order_id, email)
         tools_called.append("order_lookup")
