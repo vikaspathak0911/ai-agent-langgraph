@@ -75,6 +75,7 @@ ai-agent-langgraph/
 └── setup_project.sh     # Script for setting up the project environment
 
 ```
+<img width="683" height="863" alt="WorkFlow" src="https://github.com/user-attachments/assets/2d1a0387-e5cb-4996-9569-474c14f691e0" />
 
 ---
 
@@ -162,6 +163,7 @@ pip install -r requirements.txt
 <img width="1920" height="1080" alt="Screenshot (654)" src="https://github.com/user-attachments/assets/dc03e36f-4164-4552-bb9a-2dd2eb7016f4" />
 
 <img width="1920" height="1080" alt="Screenshot (655)" src="https://github.com/user-attachments/assets/d462dbe1-3b05-43b5-b672-945bd71e79e9" />
+
 
 
 
