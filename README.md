@@ -123,10 +123,32 @@ The responder formulates the final message based on the agent's state and decisi
 
 ```bash
 
-pip install -r requirements.txt
-python app.py
+# Create a new environment with Python 3.9
+conda create -n ai_agent python=3.9 -y
 
-The application will start on http://127.0.0.1:5500
+# Activate the environment
+conda activate ai_agent
+
+# install pip in the environment if it's not already:
+conda install pip -y
+
+# Then install your requirements:
+pip install -r requirements.txt
+
+|----------------------------------------------------------------------
+|		# Run app.py file buil with flask
+|		python app.py
+|
+|		# Open index.html file on web browser or live preview on VS code
+|		# Pass the query to the ChatBot
+|---------------------------------------------------------------------
+								
+								OR
+			
+|--------------------------------------------------------------------			
+|		# if you want to test all 4 test cases provided above 
+|		python -u "b:\Project\test\ai-agent-langgraph\tests\test_cases.py"
+|----------------------------------------------------------------------
 
 ```
 
@@ -134,6 +156,7 @@ The application will start on http://127.0.0.1:5500
 <img width="1912" height="1048" alt="image" src="https://github.com/user-attachments/assets/fb9be8c5-de9f-4150-8072-77f940ea806d" />
 
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/f1774a56-9def-49d1-99ab-88b09e2f98e3" />
+
 
 
 
