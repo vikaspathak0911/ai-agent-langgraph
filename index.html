@@ -94,7 +94,7 @@
         <div class="messages" id="messages"></div>
         <div class="input-area">
             <input type="text" class="message-input" id="messageInput" placeholder="Type your message...">
-            <div class="send-btn" id="sendBtn">Send</div>
+            <button class="send-btn" id="sendBtn">Send</button>
         </div>
     </div>
 
@@ -126,55 +126,43 @@
             
             // Disable send button
             sendBtn.textContent = 'Sending...';
-            sendBtn.style.pointerEvents = 'none';
+            sendBtn.disabled = true;
             messageInput.disabled = true;
 
             try {
+                // === THIS IS THE CORRECTED LINE ===
                 const response = await fetch('https://ai-agent-langgraph-6kfegwxzk-vikas-pathaks-projects-4d7f6572.vercel.app/chat', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({user_input: text})
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
-                addMessage(data.final_message || 'No response', false);
+                addMessage(data.final_message || 'No response received.', false);
             } catch (error) {
-                addMessage('Error: Could not connect to server', false);
+                addMessage('Error: Could not connect to the AI agent.', false);
                 console.error('Error:', error);
             }
 
             // Re-enable send button
             sendBtn.textContent = 'Send';
-            sendBtn.style.pointerEvents = 'auto';
+            sendBtn.disabled = false;
             messageInput.disabled = false;
             messageInput.focus();
         }
 
         // Event listeners
-        sendBtn.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            sendMessage();
-        };
+        sendBtn.addEventListener('click', sendMessage);
 
-        messageInput.onkeydown = function(e) {
+        messageInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                e.stopPropagation();
                 sendMessage();
             }
-        };
-
-        // Prevent any form submission
-        document.addEventListener('submit', function(e) {
-            e.preventDefault();
-            return false;
-        });
-
-        // Prevent page navigation
-        window.addEventListener('beforeunload', function(e) {
-            e.preventDefault();
-            return false;
         });
 
         // Focus input on load
