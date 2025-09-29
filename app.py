@@ -1,12 +1,21 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sys, os
+
+# This line adds the 'src' directory to Python's path so you can import modules from it.
+# This should work on Vercel, but ensure your 'src' folder is in the root of your project.
 sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 
+# Assuming graph_enhanced.py is inside the 'src' folder
 from graph_enhanced import agent, AgentState
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
+
+# A root endpoint to show a welcome message in the browser.
+@app.route("/", methods=["GET"])
+def index():
+    return jsonify({"status": "online", "message": "AI Agent API is running. Use the /chat endpoint to interact."})
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -19,7 +28,6 @@ def chat():
             return jsonify({"error": "No JSON data provided"}), 400
             
         user_input = data.get("user_input", "")
-        
         
         if not user_input.strip():
             return jsonify({"error": "Empty message"}), 400
@@ -34,12 +42,11 @@ def chat():
             final_message=""
         )
 
-        trace = agent.invoke(state)     
-        print(trace)
+        # Invoke the LangGraph agent
+        trace = agent.invoke(state)
+        print(trace) # For debugging in Vercel logs
 
-
-
-        # Ensure trace is a plain dict
+        # Ensure trace is a plain dict for JSON serialization
         if not isinstance(trace, dict):
             trace = dict(trace)
 
@@ -53,9 +60,9 @@ def chat():
             "status": "success"
         })
 
-        
     except Exception as e:
         # Log the error (in production, use proper logging)
+        # You can view these print statements in your Vercel deployment logs.
         print(f"Error in chat endpoint: {str(e)}")
         
         # Return error response
@@ -64,10 +71,11 @@ def chat():
             "message": "Something went wrong processing your request"
         }), 500
 
-# Add a health check endpoint
+# A health check endpoint to confirm the server is running.
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "healthy", "message": "Server is running"})
 
+# This block is for local development and will not be used by Vercel.
 if __name__ == "__main__":
     app.run(debug=True, host='127.0.0.1', port=5000)
