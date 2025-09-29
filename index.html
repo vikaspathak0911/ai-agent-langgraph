@@ -113,7 +113,7 @@
 
             try {
                 // === THIS URL IS NOW A RELATIVE PATH ===
-                const response = await fetch('/chat', {
+                const response = await fetch('https://ai-agent-langgraph-9tfvj4c9p-vikas-pathaks-projects-4d7f6572.vercel.app/chat', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({user_input: text})
