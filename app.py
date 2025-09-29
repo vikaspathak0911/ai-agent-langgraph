@@ -10,14 +10,19 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
 from graph_enhanced import agent, AgentState
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
 
-# === THIS IS THE NEW CODE I'VE ADDED ===
+# === THIS IS THE CORRECTED CODE FOR THE CORS FIX ===
+# This tells your backend to specifically allow requests from any origin (*)
+# to your /chat endpoint.
+CORS(app, resources={r"/chat": {"origins": "*"}})
+# ===================================================
+
+
 # A root endpoint to show a welcome message in the browser.
 @app.route("/", methods=["GET"])
 def index():
     return jsonify({"status": "online", "message": "AI Agent API is running. Use the /chat endpoint to interact."})
-# =======================================
+
 
 @app.route("/chat", methods=["POST"])
 def chat():
