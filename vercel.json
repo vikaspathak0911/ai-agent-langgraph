@@ -7,8 +7,9 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/(chat|health)",
       "dest": "app.py"
     }
   ]
 }
+
